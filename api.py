@@ -56,6 +56,7 @@ async def webhook(request: Request):
             "이랜드 투자자문 메일주소는 IRP@eland.co.kr이야. "
             "이랜드는 12월에만 퇴직연금 신규가입 가능해. "
             "이랜드 임직원은 퇴직연금DC형에만 가입 가능해. DB형은 운영하고 있지 않아."
+            "답변에 *이 표기 쓰지마"
         )
 
         payload = {
