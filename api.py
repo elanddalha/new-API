@@ -1,17 +1,15 @@
-
 import os
 import json
 import requests
 from fastapi import FastAPI, Request
 from starlette.responses import JSONResponse
 
-# 로그 파일 경로
-LOG_FILE = "log.txt"
+# 로그 저장을 위한 리스트 (파일 대신 사용)
+log_messages = []
 
 def log_message(message):
-    """로그 파일에 메시지 저장"""
-    with open(LOG_FILE, "a", encoding="utf-8") as log_file:
-        log_file.write(message + "\n")
+    """로그 메시지를 리스트에 저장"""
+    log_messages.append(message)
     print(message)  # 콘솔에도 출력
 
 # 환경 변수에서 API 키 가져오기
@@ -82,17 +80,8 @@ async def webhook(request: Request):
         log_message(error_message)
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
-# ✅ 로그 확인 엔드포인트 추가
+# ✅ 로그 확인 엔드포인트 추가 (log.txt 대신 메모리 내 로그 확인)
 @app.get("/logs")
 def get_logs():
-    """log.txt 파일 내용을 확인하는 엔드포인트"""
-    try:
-        with open(LOG_FILE, "r", encoding="utf-8") as log_file:
-            return {"logs": log_file.read()}
-    except Exception as e:
-        return {"error": f"Error reading logs: {str(e)}"}
-
-import uvicorn
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    """메모리 내 로그 확인하는 엔드포인트"""
+    return {"logs": log_messages}
